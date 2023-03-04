@@ -33,10 +33,10 @@ function launch_emulator () {
     echo "im here"
     printf "${OSTYPE}: emulator ${options} -gpu off"
     nohup emulator $options -gpu off &
-  elif [ "$OSTYPE" == "darwin"* ] || [ "$OSTYPE" == *macos* ]; then
-    echo "im here"
-    printf "${OSTYPE}: emulator ${options} -gpu swiftshader_indirect"
-    nohup emulator $options -gpu swiftshader_indirect &
+  if [[ "$OSTYPE" == *darwin* ]] || [[ "$OSTYPE" == *macos* ]]; then
+     echo "im here"
+     printf "${OSTYPE}: emulator ${options} -gpu swiftshader_indirect"
+     nohup emulator $options -gpu swiftshader_indirect &
   fi
 
   if [ $? -ne 0 ]; then
