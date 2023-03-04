@@ -36,7 +36,7 @@ function launch_emulator () {
   if [[ "$OSTYPE" == *darwin* ]] || [[ "$OSTYPE" == *macos* ]]; then
     echo "im here"
     printf "${OSTYPE}: emulator ${options} -gpu host"
-    nohup emulator $options -gpu host &
+    nohup emulator $options -gpu off &
   fi
 
   if [ $? -ne 0 ]; then
