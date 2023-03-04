@@ -6,6 +6,7 @@ on:
     branches: [main, master]
     
 env:
+  EMULATOR_NAME: nexus
   ANDROID_ARCH: x86_64
   ANDROID_TARGET: google_apis_playstore
   API_LEVEL: 33
@@ -30,9 +31,9 @@ jobs:
   
       - name: Build emulator
         run: |
-            echo "no" | avdmanager --silent --verbose create avd --force --name "nexus" --abi "${ANDROID_TARGET}/${ANDROID_ARCH}" -k "system-images;android-${API_LEVEL};${ANDROID_TARGET};${ANDROID_ARCH}"
+            echo "no" | avdmanager --silent --verbose create avd --force -n $EMULATOR_NAME --abi "${ANDROID_TARGET}/${ANDROID_ARCH}" -k "system-images;android-${API_LEVEL};${ANDROID_TARGET};${ANDROID_ARCH}"
 
       - name: launch emulator
         run: |
           chmod +x ./start_emu_headless.sh
-          ./start_emu_headless.sh
+          $EMULATOR_NAME ./start_emu_headless.sh
