@@ -30,14 +30,13 @@ function launch_emulator () {
   adb devices | grep emulator | cut -f1 | xargs -I {} adb -s "{}" emu kill
   options="@${emulator_name} -no-window -no-snapshot-load -noaudio -no-boot-anim -memory 2048 ${hw_accel_flag}"
   if [[ "$OSTYPE" == *linux* ]]; then
-    echo "im here"
     printf "${OSTYPE}: emulator ${options} -gpu off"
     nohup emulator $options -gpu off &
   fi
   if [[ "$OSTYPE" == *darwin* ]] || [[ "$OSTYPE" == *macos* ]]; then
     echo "im here"
-    printf "${OSTYPE}: emulator ${options} -gpu swiftshader_indirect"
-    nohup emulator $options -gpu swiftshader_indirect &
+    printf "${OSTYPE}: emulator ${options} -gpu off"
+    nohup emulator $options -gpu off &
   fi
 
   if [ $? -ne 0 ]; then
@@ -75,7 +74,7 @@ function check_emulator_status () {
       printf "${RED}==> Timeout after ${timeout} seconds elapsed 🕛.. ${NC}\n"
       break
     fi
-    sleep 0.2
+    sleep 2
   done
 };
 
