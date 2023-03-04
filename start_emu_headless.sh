@@ -9,7 +9,14 @@ NC='\033[0m' # No Color
 emulator_name=${EMULATOR_NAME}
 
 function check_hardware_acceleration() {
-    HW_ACCEL_SUPPORT=$(grep -E -c '(vmx|svm)' /proc/cpuinfo)
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS-specific hardware acceleration check
+        HW_ACCEL_SUPPORT=$(sysctl -a | grep -E -c '(vmx|svm)')
+    else
+        # generic Linux hardware acceleration check
+        HW_ACCEL_SUPPORT=$(grep -E -c '(vmx|svm)' /proc/cpuinfo)
+    fi
+
     if [[ $HW_ACCEL_SUPPORT == 0 ]]; then
         echo "-accel off"
     else
@@ -24,8 +31,10 @@ function launch_emulator () {
   options="-avd ${emulator_name} -no-window -no-snapshot-load -noaudio -no-boot-anim -memory 2048 ${hw_accel_flag}"
   echo "emulator "$options
   if [[ "$OSTYPE" == *linux* ]]; then
+    echo "$OSTYPE" "emulator "$options" -gpu off"
     nohup emulator $options -gpu off &
   elif [ "$OSTYPE" == *darwin* ] || [ "$OSTYPE" == *macos* ]; then
+      echo "$OSTYPE" "emulator "$options" -gpu swiftshader_indirect"
     nohup emulator $options -gpu swiftshader_indirect &
   fi
 
