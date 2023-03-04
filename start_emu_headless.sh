@@ -35,8 +35,8 @@ function launch_emulator () {
   fi
   if [[ "$OSTYPE" == *darwin* ]] || [[ "$OSTYPE" == *macos* ]]; then
     echo "im here"
-    printf "${OSTYPE}: emulator ${options} -gpu off"
-    nohup emulator $options -gpu off &
+    printf "${OSTYPE}: emulator ${options} -gpu host"
+    nohup emulator $options -gpu host &
   fi
 
   if [ $? -ne 0 ]; then
@@ -51,7 +51,7 @@ function check_emulator_status () {
   spinner=( "⠹" "⠺" "⠼" "⠶" "⠦" "⠧" "⠇" "⠏" )
   i=0
   # Get the timeout value from the environment variable or use the default value of 240 seconds (4 minutes)
-  timeout=${EMULATOR_TIMEOUT:-240}
+  timeout=${EMULATOR_TIMEOUT:-600}
 
   while true; do
     result=$(adb shell getprop sys.boot_completed 2>&1)
