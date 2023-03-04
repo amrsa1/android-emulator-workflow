@@ -30,9 +30,11 @@ function launch_emulator () {
   adb devices | grep emulator | cut -f1 | xargs -I {} adb -s "{}" emu kill
   options="@${emulator_name} -no-window -no-snapshot-load -noaudio -no-boot-anim -memory 2048 ${hw_accel_flag}"
   if [[ "$OSTYPE" == *linux* ]]; then
+    echo "im here"
     printf "${OSTYPE}: emulator ${options} -gpu off"
     nohup emulator $options -gpu off &
-  elif [ "$OSTYPE" == *darwin* ] || [ "$OSTYPE" == *macos* ]; then
+  elif [ "$OSTYPE" == "darwin"* ] || [ "$OSTYPE" == *macos* ]; then
+    echo "im here"
     printf "${OSTYPE}: emulator ${options} -gpu swiftshader_indirect"
     nohup emulator $options -gpu swiftshader_indirect &
   fi
