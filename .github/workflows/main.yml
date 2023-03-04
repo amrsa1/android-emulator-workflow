@@ -10,7 +10,7 @@ env:
   ANDROID_TARGET: google_apis_playstore
   API_LEVEL: 33
   ANDROID_BUILD_TOOLS_VERSION: 33.0.2
-  ANDROID_SDK_PACKAGES: system-images;android-33;${{ env.ANDROID_TARGET }};x86_64 platforms;android-33 build-tools;33.0.2 platform-tools emulator
+  ANDROID_SDK_PACKAGES: system-images;android-33;${{ ANDROID_TARGET }};x86_64 platforms;android-33 build-tools;33.0.2 platform-tools emulator
    
 jobs:
   android-emulator:
