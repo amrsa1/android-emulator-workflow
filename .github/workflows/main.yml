@@ -34,5 +34,5 @@ jobs:
 
       - name: launch emulator
         run: |
-          chmos +x ./start_emu_headless.sh
+          chmod +x ./start_emu_headless.sh
           ./start_emu_headless.sh
