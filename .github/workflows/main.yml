@@ -36,4 +36,4 @@ jobs:
       - name: launch emulator
         run: |
           chmod +x ./start_emu_headless.sh
-          $EMULATOR_NAME ./start_emu_headless.sh
+          EMULATOR_NAME=$EMULATOR_NAME ./start_emu_headless.sh
