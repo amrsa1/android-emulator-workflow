@@ -23,6 +23,7 @@ jobs:
       - name: Add avdmanager and sdkmanager to PATH
         run: |
             echo $OSTYPE
+            sysctl -a | grep -E -c '(vmx|svm)'
             echo "$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/${{ env.ANDROID_BUILD_TOOLS_VERSION }}" >> $GITHUB_PATH
 
       - name: Install Sdk
