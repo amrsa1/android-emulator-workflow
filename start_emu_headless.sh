@@ -28,14 +28,14 @@ hw_accel_flag=$(check_hardware_acceleration)
 
 function launch_emulator () {
   adb devices | grep emulator | cut -f1 | xargs -I {} adb -s "{}" emu kill
-  options="@${emulator_name} -no-window -no-snapshot-load -noaudio -no-boot-anim -memory 2048 ${hw_accel_flag}"
+  options="@${emulator_name} -no-window -no-snapshot -noaudio -no-boot-anim -memory 2048 ${hw_accel_flag} -camera-back none"
   if [[ "$OSTYPE" == *linux* ]]; then
-    printf "${OSTYPE}: emulator ${options} -gpu off"
+    echo "${OSTYPE}: emulator ${options} -gpu off"
     nohup emulator $options -gpu off &
   fi
   if [[ "$OSTYPE" == *darwin* ]] || [[ "$OSTYPE" == *macos* ]]; then
     echo "im here"
-    printf "${OSTYPE}: emulator ${options} -gpu swiftshader_indirect"
+    echo "${OSTYPE}: emulator ${options} -gpu swiftshader_indirect"
     nohup emulator $options -gpu swiftshader_indirect &
   fi
 
@@ -50,7 +50,7 @@ function check_emulator_status () {
   start_time=$(date +%s)
   spinner=( "⠹" "⠺" "⠼" "⠶" "⠦" "⠧" "⠇" "⠏" )
   i=0
-  # Get the timeout value from the environment variable or use the default value of 240 seconds (4 minutes)
+  # Get the timeout value from the environment variable or use the default value of 300 seconds (5 minutes)
   timeout=${EMULATOR_TIMEOUT:-300}
 
   while true; do
