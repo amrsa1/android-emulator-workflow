@@ -9,26 +9,32 @@ NC='\033[0m' # No Color
 emulator_name=${EMULATOR_NAME}
 
 function check_hardware_acceleration() {
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        # macOS-specific hardware acceleration check
-        HW_ACCEL_SUPPORT=$(sysctl -a | grep -E -c '(vmx|svm)')
+    if [[ "$HW_ACCEL_OVERRIDE" != "" ]]; then
+        hw_accel_flag="$HW_ACCEL_OVERRIDE"
     else
-        # generic Linux hardware acceleration check
-        HW_ACCEL_SUPPORT=$(grep -E -c '(vmx|svm)' /proc/cpuinfo)
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            # macOS-specific hardware acceleration check
+            HW_ACCEL_SUPPORT=$(sysctl -a | grep -E -c '(vmx|svm)')
+        else
+            # generic Linux hardware acceleration check
+            HW_ACCEL_SUPPORT=$(grep -E -c '(vmx|svm)' /proc/cpuinfo)
+        fi
+
+        if [[ $HW_ACCEL_SUPPORT == 0 ]]; then
+            hw_accel_flag="-accel off"
+        else
+            hw_accel_flag="-accel on"
+        fi
     fi
 
-    if [[ $HW_ACCEL_SUPPORT == 0 ]]; then
-        echo "-accel off"
-    else
-        echo "-accel on"
-    fi
+    echo "$hw_accel_flag"
 }
 
 hw_accel_flag=$(check_hardware_acceleration)
 
 function launch_emulator () {
   adb devices | grep emulator | cut -f1 | xargs -I {} adb -s "{}" emu kill
-  options="@${emulator_name} -no-window -no-snapshot -noaudio -no-boot-anim -memory 2048 ${hw_accel_flag} -camera-back none"
+  options="@${emulator_name} -no-window -no-snapshot -screen no-touch -noaudio -memory 2048 -no-boot-anim ${hw_accel_flag} -camera-back none"
   if [[ "$OSTYPE" == *linux* ]]; then
     echo "${OSTYPE}: emulator ${options} -gpu off"
     nohup emulator $options -gpu off &
@@ -43,7 +49,7 @@ function launch_emulator () {
     echo "Error launching emulator"
     return 1
   fi
-};
+}
 
 function check_emulator_status () {
   printf "${G}==> ${BL}Checking emulator booting up status 🧐${NC}\n"
